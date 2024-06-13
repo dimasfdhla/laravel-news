@@ -3,6 +3,7 @@
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\SiswaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,3 +50,16 @@ Route::get('login', function () {
 Route::get('register', function () {
     return view('register');
 });
+
+Route::get('tabeldata', function () {
+    $data = ['meja', 'kursi', 'pensil', 'pulpen', 'lampu'];
+    return view('table', compact('data'));
+});
+
+// Route::get('siswa', [SiswaController::class, 'index']);
+// Route::get('tambahsiswa', [SiswaController::class, 'create']);
+// Route::get('tambahsiswa', [SiswaController::class, 'create']);
+
+Route::resource('siswa', SiswaController::class);
+
+Route::post('siswa/store', [SiswaController::class, 'store']);
