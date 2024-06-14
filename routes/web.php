@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Http\Controllers\SiswaController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,16 +16,45 @@ use App\Http\Controllers\SiswaController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/show-data', function () {
-    $bahasapemrograman = ['php', 'java', 'c', 'javascript', 'dart'];
-    return ($bahasapemrograman);
+Route::get('hello', function () {
+    return 'ini laravel saya';
+});
+Route::get('tampil/{nilai}', function ($nilai) {
+    return 'Nilai saya adalah : '. $nilai;
+});
+Route::get('penjumlahan/{nilai1}/{nilai2}', function ($nilai1, $nilai2) {
+    return 'Hasil penjumlahan adalah : '. $nilai1 + $nilai2;
+});
+Route::get('pengurangan/{nilai1}/{nilai2}', function ($nilai1, $nilai2) {
+    return 'Hasil pengurangan adalah : '. $nilai1 - $nilai2;
+});
+Route::get('perkalian/{nilai1}/{nilai2}', function ($nilai1, $nilai2) {
+    return 'Hasil perkalian adalah : '. $nilai1 * $nilai2;
+});
+Route::get('pembagian/{nilai1}/{nilai2}', function ($nilai1, $nilai2) {
+    return 'Hasil pembagian adalah : '. $nilai1 / $nilai2;
 });
 
+Route::match(['get', 'post', 'put'], '/coba', function () {
+    return 'halaman coba';
+});
+
+Route::any('/any', function () {
+    return 'any';
+});
+
+Route::get('pagecontroller', [PageController::class, 'index'] );
+Route::get('pagecontrollerrequest', [PageController::class, 'request'] );
+
+Route::get('request', [PageController::class, 'requestdata'] );
+
+// Route::get('users/{id}', function ($id) {});
+// Route::post('users/{id}', function ($id) {});
+// Route::put('users/{id}', function ($id) {});
+// Route::delete('users/{id}', function ($id) {});
 
 Route::get('test', function () {
     return view('coba');
@@ -39,27 +69,12 @@ Route::get('tabeldata', function () {
     return view('table', compact('data'));
 });
 
-Route::get('index', function () {
-    return view('index');
-});
-
-Route::get('login', function () {
-    return view('login');
-});
-
-Route::get('register', function () {
-    return view('register');
-});
-
-Route::get('tabeldata', function () {
-    $data = ['meja', 'kursi', 'pensil', 'pulpen', 'lampu'];
-    return view('table', compact('data'));
-});
-
 // Route::get('siswa', [SiswaController::class, 'index']);
 // Route::get('tambahsiswa', [SiswaController::class, 'create']);
 // Route::get('tambahsiswa', [SiswaController::class, 'create']);
 
-Route::resource('siswa', SiswaController::class);
+Route::resource('siswa', SiswaController::class)->middleware(['auth', 'admin']);
 
-Route::post('siswa/store', [SiswaController::class, 'store']);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
